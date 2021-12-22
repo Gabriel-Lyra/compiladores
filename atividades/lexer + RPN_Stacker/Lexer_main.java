@@ -1,5 +1,8 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Scanner;
+import java.util.Vector;
 
 public class Lexer {
 	
@@ -84,33 +87,49 @@ public class Lexer {
                     String atom = getLexeme(input, i);
                     i += atom.length();
                     result.add(new Token(TokenType.ATOM, atom));
-                    badEntry = true;
                 }
                 break;
             }
         }
         return result;
     }
-
+    
+    
+    
     public static void main(String[] args) {
 
-        String test = "10 6 9 3 + -11 * / * 17 + 5 +";
-        String[] testCharString = { "10", "6", "9",  "3", "+", "-11", "*", "/",  "*", "17", "+", "5", "+" };
+        String test = "11 6 2 3 + -11 * / * 17 + 5 +";
+        String[] testCharString = test.split(" ");
+
+        System.out.println("Enter your variables: ");
+        Scanner sc = new Scanner(System.in);
 
         Boolean badEntry = false;
+        Vector<Token> badEntries = new Vector<Token>();
 
         List<Token> tokens = lex(test, badEntry);
-
-
+        
 
         for(Token t : tokens) {
             System.out.println(t);
+            if (t.type == Lexer.TokenType.ATOM) {
+            	badEntries.add(t);
+            	badEntry = true;
+            }
         }
 
         if(badEntry == false){
         	RPN_Stacker str = new RPN_Stacker();
             int result = str.RPN_Stack(testCharString);
+            System.out.println();
+            System.out.println("No bad entries, here is your result:");
             System.out.println(result);
+        } else {
+        	System.out.println();
+        	System.out.println("You typed this/these bad entry/entries:");
+        	for (Token b: badEntries) {
+        		System.out.println(b.lexeme);
+        	}
         }
 
     }
