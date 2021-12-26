@@ -94,8 +94,17 @@ public class Lexer {
                     result.add(new Token(TokenType.NUM, number));
                     i++;
                     break;
-                } else if(variablesNames.contains(Character.toString(input.charAt(i)))) { // if this variable was declared
-                	result.add(new Token(TokenType.VAR, Character.toString(input.charAt(i)))); // add it as a token
+                } else if(variablesNames.contains(Character.toString(input.charAt(i))) || // if this variable was declared
+                		!Character.isWhitespace(input.charAt(i+1))) { // or if next char is spacebar
+                	
+                	String variable = Character.toString(input.charAt(i));
+                	
+                	while(!Character.isWhitespace(input.charAt(i+1))) { // see if variable is a "word"
+                		variable = variable.concat(String.valueOf(input.charAt(i+1)));
+                		i++;
+                	}
+                	
+                	result.add(new Token(TokenType.VAR, variable)); // then add it as a token
                     i++;
                     break;
                 } else {
