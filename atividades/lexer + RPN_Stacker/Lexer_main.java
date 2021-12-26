@@ -172,7 +172,7 @@ public class Lexer {
         		
         		for(Token t : tokens) {								// search for bad entries
                     System.out.println(t);
-                    if (t.type == Lexer.TokenType.ATOM) {
+                    if ((t.type == Lexer.TokenType.ATOM) || (t.type == Lexer.TokenType.VAR && !variablesNames.contains(t.lexeme))) {
                     	badEntries.add(t);
                     	badEntry = true;
                     }
