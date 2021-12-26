@@ -1,12 +1,16 @@
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
+//import java.util.Collection; it's saying this is useless, not sure
 import java.util.Scanner;
 import java.util.Vector;
 
 public class Lexer {
 	
-    public static enum TokenType  {
+    private static Scanner sc;
+
+
+
+	public static enum TokenType  {
     	// Literals.
     	NUM, ATOM, //ATOM == anything else
 
@@ -95,45 +99,63 @@ public class Lexer {
     }
     
     
-    
     public static void main(String[] args) {
 
         String test = "11 6 2 3 + -11 * / * 17 + 5 +";
         String[] testCharString = test.split(" ");
-
-        System.out.println("Enter your variables: ");
-        Scanner sc = new Scanner(System.in);
-
-        Boolean badEntry = false;
-        Vector<Token> badEntries = new Vector<Token>();
-
-        List<Token> tokens = lex(test, badEntry);
         
-
-        for(Token t : tokens) {
-            System.out.println(t);
-            if (t.type == Lexer.TokenType.ATOM) {
-            	badEntries.add(t);
-            	badEntry = true;
-            }
-        }
-
-        if(badEntry == false){
-        	RPN_Stacker str = new RPN_Stacker();
-            int result = str.RPN_Stack(testCharString);
-            System.out.println();
-            System.out.println("No bad entries, here is your result:");
-            System.out.println(result);
-        } else {
-        	System.out.println();
-        	System.out.println("You typed this/these bad entry/entries:");
-        	for (Token b: badEntries) {
-        		System.out.println(b.lexeme);
+        sc = new Scanner(System.in);
+        
+        String entry = "";
+        
+        while(!(entry.equals("stop"))) {
+        	entry = sc.nextLine();
+        	String[] entryCharString = entry.split(" ");
+        	        	
+        	Boolean badEntry = false;
+        	Vector<Token> badEntries = new Vector<Token>();
+        	Vector<String> variablesNames = new Vector<String>();
+        	Vector<Integer> variablesValues = new Vector<Integer>();
+        	
+        	List<Token> tokens = null;
+        	if (entry.contains("=")) {
+        		String[] splitTemp = entry.split("=");
+        		variablesNames.add(splitTemp[0]);
+        		variablesValues.add(Integer.parseInt(splitTemp[1]));
+        	} else {
+        		tokens = lex(test, badEntry); // change test to entry later
         	}
+        	
+        	for(Token t : tokens) {
+                System.out.println(t);
+                if (t.type == Lexer.TokenType.ATOM) {
+                	badEntries.add(t);
+                	badEntry = true;
+                }
+            }
+        	
+        	if(badEntry == false){
+            	RPN_Stacker str = new RPN_Stacker();
+                int result = str.RPN_Stack(testCharString);
+                System.out.println();
+                System.out.println("No bad entries, here is your result:");
+                System.out.println(result);
+            } else {
+            	System.out.println();
+            	System.out.println("You typed this/these bad entry/entries:");
+            	for (Token b: badEntries) {
+            		System.out.println(b.lexeme);
+            	}
+            	
+            }
+        	
         }
-
+        
     }
+
 }
+    
+
 
 
 
