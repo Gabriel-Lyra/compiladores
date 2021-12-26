@@ -1,8 +1,15 @@
+// How to use this program:
+// write down your variables ex: this_is_a_variable = 12
+// then write your RPN expression ex:  this_is_a_variable 12 +
+// repeat until satisfied
+// exit program with "stop"
+
 import java.util.List;
 import java.util.ArrayList;
 //import java.util.Collection; it's saying this is useless, not sure
 import java.util.Scanner;
 import java.util.Vector;
+
 
 public class Lexer {
 	
@@ -135,7 +142,8 @@ public class Lexer {
         Vector<String> variablesNames = new Vector<String>();
     	Vector<Integer> variablesValues = new Vector<Integer>();
         
-        while(!(entry.equals("stop"))) {
+        while(!(entry.equals("stop"))) {							// to exit program write "stop" as input
+        	
         	entry = sc.nextLine();
         	String[] entryCharString = entry.split(" ");
         	        	
@@ -144,20 +152,14 @@ public class Lexer {
         	
         	List<Token> tokens = null;
         	
-        	if (entry.contains("=")) {
+        	if (entry.contains("=")) {								// if it contains "=" this is a variable
         		String[] splitTemp = entry.split("=");
         		variablesNames.add(splitTemp[0].replaceAll(" ", ""));
         		variablesValues.add(Integer.parseInt(splitTemp[1].replaceAll(" ", "")));
-        	} else if (entry.equals("test")) {
-        		tokens = lex(test, badEntry, variablesNames);
         		
-        		for(Token t : tokens) {
-                    System.out.println(t);
-                    if (t.type == Lexer.TokenType.ATOM) {
-                    	badEntries.add(t);
-                    	badEntry = true;
-                    }
-                }
+        	} else if (entry.equals("test")) {						// write "test" as input to use test string
+        															// for developing purpose only
+        		tokens = lex(test, badEntry, variablesNames);
         		
             	RPN_Stacker str = new RPN_Stacker();
             	int result = str.RPN_Stack(testCharString, variablesNames, variablesValues);
@@ -165,9 +167,10 @@ public class Lexer {
             	System.out.println(result);
         		
         	} else {
+        		
         		tokens = lex(entry, badEntry, variablesNames);
         		
-        		for(Token t : tokens) {
+        		for(Token t : tokens) {								// search for bad entries
                     System.out.println(t);
                     if (t.type == Lexer.TokenType.ATOM) {
                     	badEntries.add(t);
@@ -175,17 +178,17 @@ public class Lexer {
                     }
                 }
         		
-            	if(badEntry == false){
+            	if(badEntry == false){ 								// if there is no bad entry
                 	RPN_Stacker str = new RPN_Stacker();
                     int result = str.RPN_Stack(entryCharString, variablesNames, variablesValues);
                     System.out.println();
                     System.out.println("No bad entries, here is your result:");
-                    System.out.println(result);
+                    System.out.println(result); 					// then give result
                 } else {
                 	System.out.println();
                 	System.out.println("You typed this/these bad entry/entries:");
                 	for (Token b: badEntries) {
-                		System.out.println(b.lexeme);
+                		System.out.println(b.lexeme); 				// else print bad entries
                 	}
                 	
                 }
@@ -197,8 +200,3 @@ public class Lexer {
     }
 
 }
-    
-
-
-
-
