@@ -8,8 +8,6 @@ public class Lexer {
 	
     private static Scanner sc;
 
-
-
 	public static enum TokenType  {
     	// Literals.
     	NUM, VAR, ATOM, //ATOM == anything else
@@ -21,6 +19,7 @@ public class Lexer {
     }
     
     public static class Token {
+    	
         public final TokenType  type;
         public final String lexeme; 
         
@@ -36,7 +35,9 @@ public class Lexer {
     }
 
     public static String getLexeme(String string, int index) {
+    	
         int j = index;
+        
         for( ; j < string.length(); ) {
             if(Character.isLetter(string.charAt(j))) {
                 j++;
@@ -49,9 +50,13 @@ public class Lexer {
     
 
     public static List<Token> lex(String input, Boolean badEntry, Vector<String> variablesNames) {
+    	
         List<Token> result = new ArrayList<Token>();
+        
         for(int i = 0; i < input.length(); ) {
+        	
             switch(input.charAt(i)) {
+            
             case '-':
                 result.add(new Token(TokenType.MINUS, "-"));
                 i++;
@@ -72,7 +77,9 @@ public class Lexer {
                 result.add(new Token(TokenType.EOF, "\u0000"));
                 i++;
                 break;
+                
             default:
+            	
                 if(Character.isWhitespace(input.charAt(i))) {
                     i++;
                 } else if((int)input.charAt(i) > 47 && (int)input.charAt(i) < 58) { // if this is a number
@@ -96,15 +103,17 @@ public class Lexer {
                     i += atom.length();
                     result.add(new Token(TokenType.ATOM, atom));
                 }
+                
                 break;
+                
             }
+            
         }
+        
         return result;
+        
     }
     
-    
-    // update for commit: now code is loopable (using test variable for debugging)
-    // added vectors for future variable support update
     public static void main(String[] args) {
 
         String test = "11 6 2 3 + -11 * / * 17 + 5 +";
@@ -128,10 +137,10 @@ public class Lexer {
         	
         	if (entry.contains("=")) {
         		String[] splitTemp = entry.split("=");
-        		variablesNames.add(splitTemp[0]);
-        		variablesValues.add(Integer.parseInt(splitTemp[1]));
+        		variablesNames.add(splitTemp[0].replaceAll(" ", ""));
+        		variablesValues.add(Integer.parseInt(splitTemp[1].replaceAll(" ", "")));
         	} else if (entry.equals("test")) {
-        		tokens = lex(test, badEntry, variablesNames); // change test to entry later
+        		tokens = lex(test, badEntry, variablesNames);
         		
         		for(Token t : tokens) {
                     System.out.println(t);
@@ -141,25 +150,10 @@ public class Lexer {
                     }
                 }
         		
-        		if (entry.equals("test")) {
-            		RPN_Stacker str = new RPN_Stacker();
-            		int result = str.RPN_Stack(testCharString, variablesNames, variablesValues);
-            		System.out.println("No bad entries, here is your result:");
-            		System.out.println(result);
-            	} else if(badEntry == false){
-                	RPN_Stacker str = new RPN_Stacker();
-                    int result = str.RPN_Stack(entryCharString, variablesNames, variablesValues);
-                    System.out.println();
-                    System.out.println("No bad entries, here is your result:");
-                    System.out.println(result);
-                } else {
-                	System.out.println();
-                	System.out.println("You typed this/these bad entry/entries:");
-                	for (Token b: badEntries) {
-                		System.out.println(b.lexeme);
-                	}
-                	
-                }
+            	RPN_Stacker str = new RPN_Stacker();
+            	int result = str.RPN_Stack(testCharString, variablesNames, variablesValues);
+            	System.out.println("No bad entries, here is your result:");
+            	System.out.println(result);
         		
         	} else {
         		tokens = lex(entry, badEntry, variablesNames);
@@ -172,12 +166,7 @@ public class Lexer {
                     }
                 }
         		
-        		if (entry.equals("test")) {
-            		RPN_Stacker str = new RPN_Stacker();
-            		int result = str.RPN_Stack(testCharString, variablesNames, variablesValues);
-            		System.out.println("No bad entries, here is your result:");
-            		System.out.println(result);
-            	} else if(badEntry == false){
+            	if(badEntry == false){
                 	RPN_Stacker str = new RPN_Stacker();
                     int result = str.RPN_Stack(entryCharString, variablesNames, variablesValues);
                     System.out.println();

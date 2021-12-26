@@ -17,7 +17,9 @@ class RPN_Stacker {
             	} else {
             		stack.push(Integer.parseInt(token));
             	}
+            	
             }
+            
         }
         
         return stack.pop();
@@ -35,5 +37,7 @@ class RPN_Stacker {
         } else {
             return second - first;
         }
+        
     }
+    
 }
