@@ -1,7 +1,8 @@
 import java.util.Stack;
+import java.util.Vector;
 
 class RPN_Stacker {
-    public int RPN_Stack(String[] tokens) {
+    public int RPN_Stack(String[] tokens, Vector<String> variablesNames, Vector<Integer> variablesValues) {
         
         Stack<Integer> stack = new Stack<Integer>();
         
@@ -10,7 +11,12 @@ class RPN_Stacker {
             if ("+-*/".contains(token)) {
                 stack.push(calculate(stack.pop(), stack.pop(), token));
             } else {
-                stack.push(Integer.parseInt(token));
+            	if (variablesNames.contains(token)) {
+            		int tempPos = variablesNames.indexOf(token);
+            		stack.push(variablesValues.elementAt(tempPos));
+            	} else {
+            		stack.push(Integer.parseInt(token));
+            	}
             }
         }
         
